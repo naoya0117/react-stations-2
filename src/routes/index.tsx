@@ -1,6 +1,6 @@
 import { Outlet, useRoutes } from "react-router-dom";
-import { Home } from "@/features/home";
 import { MainLayout } from "@/components/Layout";
+import {Threads} from "@/features/thread";
 
 const App = () => {
     return (
@@ -15,7 +15,7 @@ export const AppRoutes = () => {
         {
             element: <App />,
             children: [
-                { path: '/', element: <Home /> },
+                { path: '/', element: <Threads /> },
             ]
         }
     ]

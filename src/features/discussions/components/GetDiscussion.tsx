@@ -27,9 +27,9 @@ export const GetDiscussion = ({postCount}:GetDiscussionProps) => {
         <div>
             {Array.isArray(posts) && posts.map((post) => {
                 return (
-                    <>
+                    <div className="flex justify-center">
                         <Card content={post.post}/>
-                    </>
+                    </div>
                 );
             })}
         </div>

@@ -8,6 +8,10 @@ export const CreateThread = () => {
     const navigate = useNavigate();
 
     const handleClick = () => {
+        if (title.title === "") {
+            alert("スレッドタイトルがありません");
+            return;
+        }
         const newThread = async () :Promise<void>=> {
             await createThread(title);
             navigate("/");
@@ -16,10 +20,10 @@ export const CreateThread = () => {
 
     }
     return (
-        <Form  onSubmit={handleClick} className={"mt-10"}>
+        <Form  onSubmit={handleClick} className="mt-10">
             <Label className="mb-10" required>スレッドタイトル</Label>
             <Input type="text"  className="mb-10" onChange={(e) => setTitle({title: e.target.value})} required/>
-            <Button type="button" onClick={()=>handleClick()}>作成</Button>
+            <Button className="w-[100%]" type="button" onClick={()=>handleClick()}>作成</Button>
         </Form>
     );
 };

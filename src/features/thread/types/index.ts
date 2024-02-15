@@ -1,6 +1,4 @@
 export type Thread = {
     id: string;
-    title: ThreadTitle;
+    title: string;
 };
-
-export type ThreadTitle = string;

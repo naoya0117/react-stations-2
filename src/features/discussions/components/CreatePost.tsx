@@ -1,9 +1,8 @@
-import {Form, Input, Label} from "@/components/Form";
+import {Form, TextArea, Label} from "@/components/Form";
 import {Button} from "@/components/Elements";
 import {createPost, CreatePostProps as RequestPostProps, PostData} from "../api/createPost";
 import { useState} from "react";
 import {useParams} from "react-router-dom";
-import {TextArea} from "@/components/Form/TextArea";
 
 type CreatePostProps = {
     setPostCount: (postCount: number) => void;

@@ -1,29 +1,27 @@
 import { useState} from "react";
-import { Form, Input, Label } from "@/components/Form";
-import {createThread, CreateThreadProps } from "../api/createThread";
-import {Button} from "@/components/Elements";
 import { useNavigate } from "react-router-dom";
+import { Form, Input, Label } from "@/components/Form";
+import {Button} from "@/components/Elements";
+import { CreateThreadDTO, useCreateThread} from "../api/createThread";
 export const CreateThread = () => {
-    const [title, setTitle] = useState<CreateThreadProps>({title: ""});
+    const createThreadMutation = useCreateThread();
+    const [thread, setThread] = useState<CreateThreadDTO>( {data:{title: ""}});
     const navigate = useNavigate();
 
-    const handleClick = () => {
-        if (title.title === "") {
-            alert("スレッドタイトルがありません");
+    const handleClick = async () => {
+        if (!thread.data.title) {
+            alert("タイトルを入力してください");
             return;
         }
-        const newThread = async () :Promise<void>=> {
-            await createThread(title);
-            navigate("/");
-        }
-        newThread();
-
+        await createThreadMutation.mutateAsync(thread);
+        navigate("/");
     }
+
     return (
-        <Form  onSubmit={handleClick} className="mt-10">
+        <Form  className="mt-10" >
             <Label className="mb-10" required>スレッドタイトル</Label>
-            <Input type="text"  className="mb-10" onChange={(e) => setTitle({title: e.target.value})} required/>
-            <Button className="w-[100%]" type="button" onClick={()=>handleClick()}>作成</Button>
+            <Input type="text"  className="mb-10" onChange={(e) => setThread({data:{title: e.target.value}})}/>
+            <Button className="w-[100%]" type="button" onClick={handleClick}>作成</Button>
         </Form>
     );
 };

@@ -1,7 +1,9 @@
 import * as React from 'react';
-import { ErrorBoundary } from 'react-error-boundary';
-import { HelmetProvider } from 'react-helmet-async';
-import { BrowserRouter as Router } from 'react-router-dom';
+import {ErrorBoundary} from 'react-error-boundary';
+import {HelmetProvider} from 'react-helmet-async';
+import {BrowserRouter as Router} from 'react-router-dom';
+import {QueryClientProvider} from "react-query";
+import {queryClient} from "@/lib/react-query";
 
 
 const ErrorFallback = () => {
@@ -16,13 +18,15 @@ type AppProviderProps = {
     children: React.ReactNode;
 };
 
-export const AppProvider = ({ children }: AppProviderProps) => {
+export const AppProvider = ({children}: AppProviderProps) => {
     return (
         <ErrorBoundary FallbackComponent={ErrorFallback}>
             <HelmetProvider>
-                <Router>
-                    {children}
-                </Router>
+                <QueryClientProvider client={queryClient}>
+                    <Router>
+                        {children}
+                    </Router>
+                </QueryClientProvider>
             </HelmetProvider>
         </ErrorBoundary>
     );

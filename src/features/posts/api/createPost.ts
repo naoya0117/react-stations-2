@@ -1,16 +1,36 @@
 import { axios } from '@/lib/axios';
+import {MutationConfig, queryClient} from "@/lib/react-query";
+import {useMutation} from "react-query";
+import {Posts} from "@/features/posts/types";
 
-export type CreatePostProps = {
+export type CreatePostDTO = {
+    data: {
+        post: string;
+    },
     id: string;
-    post: PostData;
+}
+export const createPost = async ({data, id}: CreatePostDTO): Promise<Posts> => {
+    return axios.post(`/threads/${id}/posts`, data);
 }
 
-export type PostData = {
-    post: string;
+type UseCreatePostOptions  = {
+    config?: MutationConfig<typeof createPost>;
 }
 
-export const createPost = async ({id, post}: CreatePostProps): Promise<void> => {
-    await axios.post(`/threads/${id}/posts`, post).catch((data) => {
-        alert("投稿に失敗しました");
-    });
+export const useCreatePost = ({config}: UseCreatePostOptions = {}) => {
+    return useMutation({
+        onMutate: async (newPost) => {
+            await queryClient.cancelQueries('posts');
+        },
+        onError: (_, __, context: any) => {
+            if(context?.previousPosts) {
+                queryClient.setQueryData('posts', context.previousPosts);
+            }
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries('posts');
+        },
+        ...config,
+        mutationFn: createPost,
+    })
 }

@@ -1,4 +1,4 @@
-import {getPosts} from "../api/getPosts";
+import {usePosts} from "../api/getPosts";
 import {useState, useEffect} from "react";
 import {Card} from "@/components/Elements";
 import {Post} from "../types";
@@ -8,20 +8,17 @@ type GetDiscussionProps = {
     ThreadId: string;
 }
 export const PostList = ({postCount, ThreadId}:GetDiscussionProps) => {
-    const [posts, setPosts] = useState<Post[]>([]);
+    const postsQuery = usePosts({threadId: ThreadId});
+    console.log(postsQuery.data);
 
-    useEffect(() => {
-        const fetchPosts = async () => {
-            await getPosts({threadId: ThreadId}).then((data) => {
-                setPosts(data.posts);
-                console.log(data);
-            });
-        }
-        fetchPosts();
-    }, [ThreadId, postCount]);
+    if (!postsQuery.data) {
+        return <div>Loading...</div>;
+    }
+
     return (
         <div>
-            {Array.isArray(posts) && posts.map((post) => {
+            {
+                postsQuery.data.posts.map((post) => {
                 return (
                     <div className="flex justify-center">
                         <Card content={post.post}/>

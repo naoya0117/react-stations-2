@@ -1,8 +1,7 @@
 import {Form, TextArea, Label} from "@/components/Form";
 import {Button} from "@/components/Elements";
-import {createPost, CreatePostProps as RequestPostProps, PostData} from "../api/createPost";
-import { useState} from "react";
-import {useParams} from "react-router-dom";
+import {useCreatePost} from "../api/createPost";
+import {useState} from "react";
 
 type CreatePostProps = {
     setPostCount: (postCount: number) => void;
@@ -10,31 +9,21 @@ type CreatePostProps = {
     ThreadId: string;
 };
 export const CreatePost = ({setPostCount, postCount, ThreadId}:CreatePostProps) => {
-    const [post, setPost] = useState<PostData>({ post: ""});
+    const createPostMutation = useCreatePost();
+    const [post, setPost] = useState<string>("");
 
-    const clearForm = () => {
-        setPost({post: ""});
-    }
-    const handleClick = () => {
-        if (post.post === "") {
-            alert("投稿内容がありません");
+    const handleClick = async() => {
+        if (post === "") {
+            alert("投稿内容が空です");
             return;
         }
-        const buildPost = (id: string, post: PostData) :RequestPostProps => {
-            return {id, post};
-        }
-        const newPost = async () :Promise<void> => {
-            await createPost(buildPost(ThreadId, post));
-            clearForm();
-            setPostCount(postCount + 1);
-        }
-        newPost();
+        await createPostMutation.mutateAsync({data: {post: post}, id: ThreadId});
     }
 
     return (
             <Form className="flex flex-col">
                 <Label  htmlFor="post" required>新規投稿</Label>
-                <TextArea className="mt-10"  value={ post.post} onChange={ (e) => setPost({post: e.target.value})} id="post"/>
+                <TextArea className="mt-10"  value={ post} onChange={ (e) => setPost(e.target.value)} id="post"/>
                 <Button className="mt-10" type="button" onClick={()=>handleClick()}>投稿</Button>
             </Form>
     );

@@ -1,28 +1,24 @@
-import {getDiscussion} from "../api/getDiscussion";
+import {getPosts} from "../api/getPosts";
 import {useState, useEffect} from "react";
-import { useParams} from "react-router-dom";
-import {Posts} from "../types";
 import {Card} from "@/components/Elements";
+import {Post} from "../types";
 
 type GetDiscussionProps = {
     postCount: number;
+    ThreadId: string;
 }
-export const GetDiscussion = ({postCount}:GetDiscussionProps) => {
-    const {id} = useParams<{id:string}>();
-    console.log(id);
-    const [posts, setPosts] = useState<Posts>([]);
+export const PostList = ({postCount, ThreadId}:GetDiscussionProps) => {
+    const [posts, setPosts] = useState<Post[]>([]);
+
     useEffect(() => {
         const fetchPosts = async () => {
-            if (id === undefined) {
-                return;
-            }
-            await getDiscussion(id).then((data) => {
+            await getPosts({threadId: ThreadId}).then((data) => {
                 setPosts(data.posts);
                 console.log(data);
             });
         }
         fetchPosts();
-    }, [id, postCount]);
+    }, [ThreadId, postCount]);
     return (
         <div>
             {Array.isArray(posts) && posts.map((post) => {

@@ -7,9 +7,9 @@ import {useParams} from "react-router-dom";
 type CreatePostProps = {
     setPostCount: (postCount: number) => void;
     postCount: number;
+    ThreadId: string;
 };
-export const CreatePost = ({setPostCount, postCount}:CreatePostProps) => {
-    const { id } = useParams();
+export const CreatePost = ({setPostCount, postCount, ThreadId}:CreatePostProps) => {
     const [post, setPost] = useState<PostData>({ post: ""});
 
     const clearForm = () => {
@@ -24,8 +24,7 @@ export const CreatePost = ({setPostCount, postCount}:CreatePostProps) => {
             return {id, post};
         }
         const newPost = async () :Promise<void> => {
-            id !== undefined &&
-            await createPost(buildPost(id, post));
+            await createPost(buildPost(ThreadId, post));
             clearForm();
             setPostCount(postCount + 1);
         }

@@ -1,7 +1,7 @@
 import { Outlet, useRoutes } from "react-router-dom";
 import { MainLayout } from "@/components/Layout";
 import {Threads,NewThread} from "@/features/thread";
-import { Discussion } from  "@/features/discussions";
+import { Post } from "@/features/posts";
 
 const App = () => {
     return (
@@ -18,7 +18,7 @@ export const AppRoutes = () => {
             children: [
                 { path: '/', element: <Threads /> },
                 { path: '/thread/new', element: <NewThread /> },
-                { path: '/thread/:id', element: <Discussion />},
+                { path: '/thread/:id', element: <Post /> },
             ]
         }
     ]
